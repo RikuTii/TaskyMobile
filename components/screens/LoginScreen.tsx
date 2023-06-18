@@ -10,17 +10,16 @@ import TaskListing from './TaskListing';
 
 const LoginScreen = () => {
   const { user, setUser } = useContext(GlobalContext);
-
-  const [userName, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
+  //dev placeholders
+  const [userName, setUsername] = useState('joydip');
+  const [password, setPassword] = useState('joydip123');
 
   useEffect(() => {
     if(storage.contains('access_token') && storage.contains('refresh_token')) {
       if(user === null) {
         const user: UserAccount = {
           id: 1,
-          username: 'test',
+          username: 'mobileUser',
           access_token: storage.getString('access_token'),
           refresh_token: storage.getString('refresh_token'),
         };
@@ -33,7 +32,7 @@ const LoginScreen = () => {
     await axios
       .post(
         APP_URL + 'useraccount/CreateToken',
-        { username: 'joydip', password: 'joydip123' },
+        { username: userName, password: password },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -45,7 +44,7 @@ const LoginScreen = () => {
         const token: AccessToken = response.data;
         const user: UserAccount = {
           id: 1,
-          username: 'test',
+          username: 'mobileUser',
           access_token: token.access_token,
           refresh_token: token.refresh_token,
         };
@@ -59,7 +58,6 @@ const LoginScreen = () => {
   };
 
   const refreshToken = async () => {
-    console.log(user?.access_token,user?.refresh_token);
     await axios
       .post(
         APP_URL + 'useraccount/RefreshToken',
@@ -94,9 +92,9 @@ const LoginScreen = () => {
   const isTokenExpired = () => {
     const tokenString = storage.getString('access_token');
     if (tokenString) {
-      const decoded = jwtDecode<JwtPayload>(tokenString);
-      if (decoded && decoded.exp) {
-        if (decoded.exp * 1000 < new Date().getTime()) {
+      const decodedToken = jwtDecode<JwtPayload>(tokenString);
+      if (decodedToken && decodedToken.exp) {
+        if ((decodedToken.exp * 1000) < new Date().getTime()) {
           return true;
         }
       }
