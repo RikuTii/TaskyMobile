@@ -12,9 +12,11 @@
   "dependencies": {
     "@react-native-community/netinfo": "^9.3.10",
     "axios": "^1.4.0",
+    "jwt-decode": "^3.1.2",
     "react": "18.2.0",
     "react-native": "0.71.11",
-    "react-native-dotenv": "^3.4.8"
+    "react-native-dotenv": "^3.4.8",
+    "react-native-mmkv": "^2.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -23,6 +25,7 @@
     "@react-native-community/eslint-config": "^3.2.0",
     "@tsconfig/react-native": "^2.0.2",
     "@types/jest": "^29.2.1",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/react": "^18.0.24",
     "@types/react-native-dotenv": "^0.2.0",
     "@types/react-test-renderer": "^18.0.0",

@@ -28,6 +28,9 @@ import GlobalContextProvider, { GlobalContext } from './components/GlobalContext
 import axios from 'axios';
 import LoginScreen from './components/screens/LoginScreen';
 
+import { MMKV } from 'react-native-mmkv'
+export const storage = new MMKV();
+
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -63,9 +66,8 @@ function App(): JSX.Element {
 
   return (
     <GlobalContextProvider>
-      <SafeAreaView style={{backgroundColor: 'gray', flex: 1}}>
+      <SafeAreaView style={{backgroundColor: 'rgb(69, 69, 69)', flex: 1}}>
         <LoginScreen></LoginScreen>
-        <Text>hello</Text>
       </SafeAreaView>
     </GlobalContextProvider>
   );
