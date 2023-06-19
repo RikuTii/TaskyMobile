@@ -1,3 +1,5 @@
+import { TaskStatus } from "./enum";
+
 export type Tasklist = {
     id?: number;
     name?: string;
@@ -13,13 +15,8 @@ export type Task = {
     createdDate?: string;
     creator?: any;
     taskList?: Tasklist;
-    status?: number;
+    status?: TaskStatus
+    ;
     taskListID?: number;
 };
 
-export enum TaskStatus
-{
-  NotCreated,
-  NotDone,
-  Done
-}

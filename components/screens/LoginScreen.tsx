@@ -8,22 +8,55 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { AccessToken } from '../../types/global';
 import TaskListing from './TaskListing';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const { user, setUser } = useContext(GlobalContext);
   //dev placeholders
   const [userName, setUsername] = useState('joydip');
   const [password, setPassword] = useState('joydip123');
 
+  const listener = storage.addOnValueChangedListener((changedKey) => {
+    const newValue = storage.getString(changedKey)
+    if(changedKey === "refresh_token") {
+      const newUser: UserAccount = {
+        id: 1,
+        username: 'mobileUser',
+        access_token: storage.getString('access_token'),
+        refresh_token: newValue,
+      };
+      setUser(newUser);
+    }
+
+    if(changedKey === "access_token") {
+      if(user?.access_token) {
+        if(user?.access_token == newValue)  {
+          return;
+        }
+      }
+      const newUser: UserAccount = {
+        id: 1,
+        username: 'mobileUser',
+        access_token: newValue,
+        refresh_token: storage.getString('refresh_token'),
+      };
+      setUser(newUser);
+    }
+  })
+
   useEffect(() => {
     if(storage.contains('access_token') && storage.contains('refresh_token')) {
       if(user === null) {
-        const user: UserAccount = {
-          id: 1,
-          username: 'mobileUser',
-          access_token: storage.getString('access_token'),
-          refresh_token: storage.getString('refresh_token'),
-        };
-        setUser(user);
+        if(isTokenExpired()) {
+          refreshToken();
+        } else {
+          const user: UserAccount = {
+            id: 1,
+            username: 'mobileUser',
+            access_token: storage.getString('access_token'),
+            refresh_token: storage.getString('refresh_token'),
+          };
+          setUser(user);
+          navigation.navigate('TaskListing');
+        }    
       }
     }
   },[]);
@@ -49,6 +82,7 @@ const LoginScreen = () => {
           refresh_token: token.refresh_token,
         };
         setUser(user);
+        console.log('got token');
         storage.set('access_token', token.access_token);
         storage.set('refresh_token', token.refresh_token);
       })
@@ -81,6 +115,8 @@ const LoginScreen = () => {
           refresh_token: token.refresh_token,
         };
         setUser(user);
+        console.log('got token');
+
         storage.set('access_token', token.access_token);
         storage.set('refresh_token', token.refresh_token);
       })
@@ -105,7 +141,7 @@ const LoginScreen = () => {
   const attemptLogin = () => {
   //  getUserToken(); return;
    // refreshToken(); return;
-    if (storage.contains('access_token')) {
+   /* if (storage.contains('access_token')) {
       if (isTokenExpired()) {
         console.log('token expired');
         refreshToken();
@@ -114,7 +150,8 @@ const LoginScreen = () => {
       }
     } else {
       getUserToken();
-    }
+    }*/
+    getUserToken();
   };
 
   return (
