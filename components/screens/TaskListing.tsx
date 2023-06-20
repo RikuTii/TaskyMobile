@@ -11,6 +11,7 @@ import DropDown from '../ui/DropDown';
 import DraggableFlatList, {
   RenderItemParams,
 } from 'react-native-draggable-flatlist';
+import { useFocusEffect } from '@react-navigation/native';
 
 const TaskListing = () => {
   const [taskLists, setTaskLists] = useState<Tasklist[]>();
@@ -33,6 +34,12 @@ const TaskListing = () => {
   useEffect(() => {
     getTaskLists();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getTaskLists();
+    },[]),
+  );
 
   useEffect(() => {
     if (selectedTaskList?.tasks) setTasks(selectedTaskList.tasks);
@@ -215,10 +222,15 @@ const TaskListing = () => {
             position: 'absolute',
             right: 50,
             bottom: 0,
-            backgroundColor: 'white',
+            borderRadius: 50,
+            backgroundColor: 'gray',
             height: 50,
             width: 50,
-          }}></View>
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Icon name="plus" size={25} color="white" />
+          </View>
       </Pressable>
     </KeyboardAvoidingView>
   );

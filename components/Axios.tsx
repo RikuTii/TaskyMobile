@@ -36,16 +36,18 @@ const refreshToken = async (error: any) => {
       storage.set('access_token', token.access_token);
       storage.set('refresh_token', token.refresh_token);
       console.log('new token', token.access_token);
-      setTimeout(() => {
-        const cfg = {...error.config};
-        cfg.headers.Authorization = "Bearer " + storage.getString('access_token');
-        axiosInstance.request(cfg);
-      }, 5000);
     })
     .catch(err => {
       console.log(err);
     });
 };
+
+axios.interceptors.request.use(function (config) {
+  config.headers.Authorization = "Bearer " + storage.getString('access_token');
+  return config;
+}, function (error) {
+  return Promise.reject(error);
+});
 
 axiosInstance.interceptors.response.use((response) => {
   return response;
@@ -53,7 +55,7 @@ axiosInstance.interceptors.response.use((response) => {
   if(error.response?.status === 401) {
     console.log('refresh token');
     refreshToken(error);
-    return Promise.reject(error); 
+    return Promise.reject('invalid token'); 
   }
   return Promise.reject(error);
 });
