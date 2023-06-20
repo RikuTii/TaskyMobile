@@ -16,6 +16,7 @@ export const axiosInstance = axios.create({
 
 const refreshToken = async (error: any) => {
  // console.log("old", storage.getString('access_token'));
+ console.log('get token');
   await axios
     .post(
       APP_URL + 'useraccount/RefreshToken',
@@ -34,7 +35,7 @@ const refreshToken = async (error: any) => {
       const token: AccessToken = response.data;
       storage.set('access_token', token.access_token);
       storage.set('refresh_token', token.refresh_token);
- //     console.log('new token', token.access_token);
+      console.log('new token', token.access_token);
       setTimeout(() => {
         const cfg = {...error.config};
         cfg.headers.Authorization = "Bearer " + storage.getString('access_token');
