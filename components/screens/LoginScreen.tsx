@@ -14,9 +14,9 @@ const LoginScreen = ({ navigation }) => {
   const [userName, setUsername] = useState('joydip');
   const [password, setPassword] = useState('joydip123');
 
-  const listener = storage.addOnValueChangedListener((changedKey) => {
-    const newValue = storage.getString(changedKey)
-    if(changedKey === "refresh_token") {
+  /*const listener = storage.addOnValueChangedListener(changedKey => {
+    const newValue = storage.getString(changedKey);
+    if (changedKey === 'refresh_token') {
       const newUser: UserAccount = {
         id: 1,
         username: 'mobileUser',
@@ -26,9 +26,9 @@ const LoginScreen = ({ navigation }) => {
       setUser(newUser);
     }
 
-    if(changedKey === "access_token") {
-      if(user?.access_token) {
-        if(user?.access_token == newValue)  {
+    if (changedKey === 'access_token') {
+      if (user?.access_token) {
+        if (user?.access_token == newValue) {
           return;
         }
       }
@@ -40,12 +40,12 @@ const LoginScreen = ({ navigation }) => {
       };
       setUser(newUser);
     }
-  })
+  });*/
 
   useEffect(() => {
-    if(storage.contains('access_token') && storage.contains('refresh_token')) {
-      if(user === null) {
-        if(isTokenExpired()) {
+    if (storage.contains('access_token') && storage.contains('refresh_token')) {
+      if (user === null) {
+        if (isTokenExpired()) {
           refreshToken();
         } else {
           const user: UserAccount = {
@@ -56,12 +56,13 @@ const LoginScreen = ({ navigation }) => {
           };
           setUser(user);
           navigation.navigate('TaskListing');
-        }    
+        }
       }
     }
-  },[]);
+  }, []);
 
   const getUserToken = async () => {
+    console.log('request');
     await axios
       .post(
         APP_URL + 'useraccount/CreateToken',
@@ -75,13 +76,6 @@ const LoginScreen = ({ navigation }) => {
       )
       .then(response => {
         const token: AccessToken = response.data;
-        const user: UserAccount = {
-          id: 1,
-          username: 'mobileUser',
-          access_token: token.access_token,
-          refresh_token: token.refresh_token,
-        };
-        setUser(user);
         console.log('got token');
         storage.set('access_token', token.access_token);
         storage.set('refresh_token', token.refresh_token);
@@ -92,12 +86,13 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const refreshToken = async () => {
+    console.log('refresh',APP_URL);
     await axios
       .post(
         APP_URL + 'useraccount/RefreshToken',
         {
-          access_token: user?.access_token,
-          refresh_token: user?.refresh_token,
+          access_token: storage.getString('access_token'),
+          refresh_token: storage.getString('refresh_token'),
         },
         {
           headers: {
@@ -108,20 +103,12 @@ const LoginScreen = ({ navigation }) => {
       )
       .then(response => {
         const token: AccessToken = response.data;
-        const user: UserAccount = {
-          id: 1,
-          username: 'test',
-          access_token: token.access_token,
-          refresh_token: token.refresh_token,
-        };
-        setUser(user);
         console.log('got token');
-
         storage.set('access_token', token.access_token);
         storage.set('refresh_token', token.refresh_token);
       })
       .catch(err => {
-        console.log(err);
+        console.log(err.response);
       });
   };
 
@@ -130,7 +117,7 @@ const LoginScreen = ({ navigation }) => {
     if (tokenString) {
       const decodedToken = jwtDecode<JwtPayload>(tokenString);
       if (decodedToken && decodedToken.exp) {
-        if ((decodedToken.exp * 1000) < new Date().getTime()) {
+        if (decodedToken.exp * 1000 < new Date().getTime()) {
           return true;
         }
       }
@@ -139,9 +126,9 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const attemptLogin = () => {
-  //  getUserToken(); return;
-   // refreshToken(); return;
-   /* if (storage.contains('access_token')) {
+    //  getUserToken(); return;
+    // refreshToken(); return;
+    /* if (storage.contains('access_token')) {
       if (isTokenExpired()) {
         console.log('token expired');
         refreshToken();
@@ -178,8 +165,6 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.buttonTitle}>Login</Text>
         </View>
       </Pressable>
-
-      <TaskListing></TaskListing>
     </View>
   );
 };

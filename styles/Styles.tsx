@@ -7,5 +7,11 @@ export const GlobalStyles = StyleSheet.create({
    center: {
     alignItems: 'center',
     justifyContent: 'center'
+   },
+  });
+
+  export const TextStyles = StyleSheet.create({
+   white: {
+      color: 'rgb(245,245,245)',
    }
   });

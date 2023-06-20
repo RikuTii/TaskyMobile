@@ -15,7 +15,7 @@ export const axiosInstance = axios.create({
 
 
 const refreshToken = async (error: any) => {
-  console.log("old", storage.getString('access_token'));
+ // console.log("old", storage.getString('access_token'));
   await axios
     .post(
       APP_URL + 'useraccount/RefreshToken',
@@ -34,9 +34,11 @@ const refreshToken = async (error: any) => {
       const token: AccessToken = response.data;
       storage.set('access_token', token.access_token);
       storage.set('refresh_token', token.refresh_token);
-      console.log('new token', token.access_token);
+ //     console.log('new token', token.access_token);
       setTimeout(() => {
-        axiosInstance.request(error.config);
+        const cfg = {...error.config};
+        cfg.headers.Authorization = "Bearer " + storage.getString('access_token');
+        axiosInstance.request(cfg);
       }, 5000);
     })
     .catch(err => {
@@ -44,13 +46,13 @@ const refreshToken = async (error: any) => {
     });
 };
 
-axiosInstance.interceptors.response.use(function (response) {
+axiosInstance.interceptors.response.use((response) => {
   return response;
-}, function (error) {
-  if(error.response.status === 401) {
+}, (error) => {
+  if(error.response?.status === 401) {
     console.log('refresh token');
     refreshToken(error);
-    return Promise.resolve(error); 
+    return Promise.reject(error); 
   }
   return Promise.reject(error);
 });
