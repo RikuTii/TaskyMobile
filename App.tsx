@@ -7,9 +7,12 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { MMKV } from 'react-native-mmkv';
 import TaskListing from './components/screens/TaskListing';
+import CreateTaskList from './components/screens/CreateTaskList';
+import { RootStackParamList } from './types/global';
 
 export const storage = new MMKV();
-const Drawer = createDrawerNavigator();
+
+const Drawer = createDrawerNavigator<RootStackParamList>();
 
 const navigatorTheme = {
   ...DefaultTheme,
@@ -22,6 +25,8 @@ const navigatorTheme = {
     text: 'rgb(235,235,235)',
   },
 };
+
+
 
 const App = (): JSX.Element => {
   return (
@@ -38,6 +43,11 @@ const App = (): JSX.Element => {
               name="TaskListing"
               options={{ title: 'TaskListing' }}
               component={TaskListing}
+            />
+              <Drawer.Screen
+              name="CreateTaskList"
+              options={{ title: 'CreateTaskList' }}
+              component={CreateTaskList}
             />
           </Drawer.Navigator>
         </NavigationContainer>

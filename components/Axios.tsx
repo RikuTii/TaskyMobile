@@ -42,10 +42,10 @@ const refreshToken = async (error: any) => {
     });
 };
 
-axios.interceptors.request.use(function (config) {
+axiosInstance.interceptors.request.use((config) => {
   config.headers.Authorization = "Bearer " + storage.getString('access_token');
   return config;
-}, function (error) {
+}, (error) => {
   return Promise.reject(error);
 });
 

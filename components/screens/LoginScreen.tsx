@@ -5,42 +5,16 @@ import { APP_URL } from '@env';
 import { storage } from '../../App';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { AccessToken } from '../../types/global';
-import TaskListing from './TaskListing';
+import { AccessToken, RootStackParamList } from '../../types/global';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const LoginScreen = ({ navigation }) => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+const LoginScreen = ({ navigation }: Props) => {
   const { user, setUser } = useContext(GlobalContext);
   //dev placeholders
   const [userName, setUsername] = useState('joydip');
   const [password, setPassword] = useState('joydip123');
-
-  /*const listener = storage.addOnValueChangedListener(changedKey => {
-    const newValue = storage.getString(changedKey);
-    if (changedKey === 'refresh_token') {
-      const newUser: UserAccount = {
-        id: 1,
-        username: 'mobileUser',
-        access_token: storage.getString('access_token'),
-        refresh_token: newValue,
-      };
-      setUser(newUser);
-    }
-
-    if (changedKey === 'access_token') {
-      if (user?.access_token) {
-        if (user?.access_token == newValue) {
-          return;
-        }
-      }
-      const newUser: UserAccount = {
-        id: 1,
-        username: 'mobileUser',
-        access_token: newValue,
-        refresh_token: storage.getString('refresh_token'),
-      };
-      setUser(newUser);
-    }
-  });*/
 
   useEffect(() => {
     if (storage.contains('access_token') && storage.contains('refresh_token')) {

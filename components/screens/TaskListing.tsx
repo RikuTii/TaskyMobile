@@ -90,6 +90,22 @@ const TaskListing = () => {
       });
   };
 
+  
+  const refreshActiveTaskList = async (id: number) => {
+    await axiosInstance
+      .get('tasks/TaskList', {
+        params: {
+          taskListId: id,
+        }
+      })
+      .then(response => {
+       setSelectedTaskList(response.data);    
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   const delayedTaskUpdate = useCallback(
     debounce((q: Task) => onTaskUpdated(q), 1000),
     [],
@@ -202,8 +218,9 @@ const TaskListing = () => {
       <DropDown
         items={taskLists}
         value={selectedTaskList?.name}
-        setValue={(n: any) => {
+        setValue={(n: Tasklist) => {
           setSelectedTaskList(n);
+          refreshActiveTaskList(n.id ?? 0);
         }}
       />
       <DraggableFlatList
