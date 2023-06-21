@@ -26,8 +26,6 @@ const navigatorTheme = {
   },
 };
 
-
-
 const App = (): JSX.Element => {
   return (
     <GlobalContextProvider>
@@ -44,7 +42,7 @@ const App = (): JSX.Element => {
               options={{ title: 'TaskListing' }}
               component={TaskListing}
             />
-              <Drawer.Screen
+            <Drawer.Screen
               name="CreateTaskList"
               options={{ title: 'CreateTaskList' }}
               component={CreateTaskList}

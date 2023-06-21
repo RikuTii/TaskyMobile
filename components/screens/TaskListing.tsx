@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, Text, View, KeyboardAvoidingView } from 'react-native';
+import { Pressable, Text, View, KeyboardAvoidingView, Keyboard } from 'react-native';
 import { Tasklist, Task } from '../../types/tasks';
 import { axiosInstance } from '../Axios';
 import { GlobalStyles } from '../../styles/Styles';
@@ -17,6 +17,11 @@ const TaskListing = () => {
   const [taskLists, setTaskLists] = useState<Tasklist[]>();
   const [selectedTaskList, setSelectedTaskList] = useState<Tasklist | null>();
   const [tasks, setTasks] = useState<Array<Task> | null>(null);
+
+
+  Keyboard.addListener('keyboardDidHide', () => {
+    Keyboard.dismiss();
+  });
 
   const getTaskLists = async () => {
     await axiosInstance
@@ -38,7 +43,7 @@ const TaskListing = () => {
   useFocusEffect(
     useCallback(() => {
       getTaskLists();
-    },[]),
+    }, []),
   );
 
   useEffect(() => {
@@ -90,16 +95,15 @@ const TaskListing = () => {
       });
   };
 
-  
   const refreshActiveTaskList = async (id: number) => {
     await axiosInstance
       .get('tasks/TaskList', {
         params: {
           taskListId: id,
-        }
+        },
       })
       .then(response => {
-       setSelectedTaskList(response.data);    
+        setSelectedTaskList(response.data);
       })
       .catch(err => {
         console.log(err);
@@ -153,8 +157,12 @@ const TaskListing = () => {
       <Pressable onLongPress={drag}>
         <View
           key={task.id}
-          style={[GlobalStyles.flexRow, { alignItems: 'center' }]}>
-          <Icon name="list" size={14} color="white" />
+          style={[
+            GlobalStyles.flexRow,
+            { alignItems: 'center', alignContent: 'center' },
+            isActive ? { backgroundColor: 'rgba(30,30,30,0.5)' } : {},
+          ]}>
+          <Icon name="list" size={16} color="white" />
           <TextInput
             value={task.title}
             onChangeText={(text: string) => {
@@ -169,10 +177,9 @@ const TaskListing = () => {
             style={{
               color: 'white',
               marginLeft: 8,
+              padding: 4,
               width: 100,
-              height: 35,
-              borderColor: 'white',
-              borderRadius: 2,
+              alignSelf: 'center'
             }}
           />
           <Pressable
@@ -182,14 +189,13 @@ const TaskListing = () => {
               } else {
                 task.status = TaskStatus.NotDone;
               }
-
               const newTasks = [...(tasks ?? [])];
               const currentTask = newTasks.find(e => e.id === task.id);
               if (currentTask) {
                 currentTask.status = task.status;
                 setTasks(newTasks);
               }
-              delayedTaskUpdate(task);
+              onTaskUpdated(task);
             }}>
             <View
               style={{
@@ -244,10 +250,10 @@ const TaskListing = () => {
             height: 50,
             width: 50,
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}>
-            <Icon name="plus" size={25} color="white" />
-          </View>
+          <Icon name="plus" size={25} color="white" />
+        </View>
       </Pressable>
     </KeyboardAvoidingView>
   );
