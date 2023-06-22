@@ -8,6 +8,12 @@ export const GlobalStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
    },
+   mr8: {
+      marginRight: 8
+   },
+   mr4: {
+      marginRight: 4
+   }
   });
 
   export const TextStyles = StyleSheet.create({
@@ -17,7 +23,11 @@ export const GlobalStyles = StyleSheet.create({
    mainTitle: {
       color: 'rgb(245,245,245)',
       fontSize: 20,
-   }
+   },
+   subTitle: {
+      color: 'rgb(245,245,245)',
+      fontSize: 16,
+   },
   });
 
 export const InputStyles = StyleSheet.create({

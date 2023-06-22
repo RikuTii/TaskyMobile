@@ -36,10 +36,6 @@ const TaskListing = () => {
       });
   };
 
-  useEffect(() => {
-    getTaskLists();
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
       getTaskLists();
@@ -69,6 +65,7 @@ const TaskListing = () => {
         status: TaskStatus.NotCreated,
         taskList: selectedTaskList,
         taskListID: selectedTaskList?.id,
+        creator: null
       };
       if (tasks) {
         const newTasks = [...tasks];

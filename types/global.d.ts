@@ -7,4 +7,5 @@ export type RootStackParamList = {
     Home: undefined;
     TaskListing: undefined;
     CreateTaskList: undefined;
+    TaskLists: undefined;
   };

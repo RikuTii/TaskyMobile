@@ -9,6 +9,7 @@ import { MMKV } from 'react-native-mmkv';
 import TaskListing from './components/screens/TaskListing';
 import CreateTaskList from './components/screens/CreateTaskList';
 import { RootStackParamList } from './types/global';
+import TaskLists from './components/screens/TaskLists';
 
 export const storage = new MMKV();
 
@@ -46,6 +47,11 @@ const App = (): JSX.Element => {
               name="CreateTaskList"
               options={{ title: 'CreateTaskList' }}
               component={CreateTaskList}
+            />
+              <Drawer.Screen
+              name="TaskLists"
+              options={{ title: 'Manage tasklists' }}
+              component={TaskLists}
             />
           </Drawer.Navigator>
         </NavigationContainer>
