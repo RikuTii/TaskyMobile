@@ -1,5 +1,8 @@
 import { StyleSheet } from "react-native";
 
+
+const textColor = "rgb(200,200,200)"
+
 export const GlobalStyles = StyleSheet.create({
    flexRow: {
     flexDirection: 'row',
@@ -13,20 +16,29 @@ export const GlobalStyles = StyleSheet.create({
    },
    mr4: {
       marginRight: 4
-   }
+   },
+   backGroundColor: {
+      backgroundColor: "black",
+   },
   });
 
   export const TextStyles = StyleSheet.create({
    white: {
-      color: 'rgb(245,245,245)',
+      color: textColor,
    },
    mainTitle: {
-      color: 'rgb(245,245,245)',
+      color: textColor,
       fontSize: 20,
    },
    subTitle: {
-      color: 'rgb(245,245,245)',
+      color: textColor,
       fontSize: 16,
+   },
+   logoTitle: {
+      color: textColor,
+      fontSize: 20,
+      fontWeight: "700",
+      fontFamily: 'Roboto, sans-serif',
    },
   });
 
@@ -36,16 +48,17 @@ export const InputStyles = StyleSheet.create({
       borderRadius: 4,
       alignItems: 'flex-start',
       justifyContent: 'center',
-      color: 'rgb(245,245,245)',
+      color: textColor,
       borderBottomWidth: 2,
       borderColor: 'rgb(124,124,124)',
       marginVertical: 4,
       padding: 0,
       margin: 4,
+      
    },
    title: {
       fontSize: 16,
-      color: 'rgb(245,245,245)',
+      color: textColor,
    },
    button: {
       backgroundColor: 'rgb(60,60,150)',

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, Text, View, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { Pressable, Text, View, KeyboardAvoidingView, Keyboard, Dimensions } from 'react-native';
 import { Tasklist, Task } from '../../types/tasks';
 import { axiosInstance } from '../Axios';
 import { GlobalStyles } from '../../styles/Styles';
@@ -12,11 +12,13 @@ import DraggableFlatList, {
   RenderItemParams,
 } from 'react-native-draggable-flatlist';
 import { useFocusEffect } from '@react-navigation/native';
+import Skeleton from '../ui/Skeleton';
 
 const TaskListing = () => {
   const [taskLists, setTaskLists] = useState<Tasklist[]>();
   const [selectedTaskList, setSelectedTaskList] = useState<Tasklist | null>();
   const [tasks, setTasks] = useState<Array<Task> | null>(null);
+  const [loading, setLoading] = useState(false);
 
 
   Keyboard.addListener('keyboardDidHide', () => {
@@ -24,12 +26,14 @@ const TaskListing = () => {
   });
 
   const getTaskLists = async () => {
+    setLoading(true);
     await axiosInstance
-      .get('tasks/Index')
+      .get('tasklist/Index')
       .then(response => {
-        const data = JSON.parse(response.data);
+        const data = response.data;
         setTaskLists(data);
         setSelectedTaskList(data[0]);
+        setLoading(false);
       })
       .catch(err => {
         console.log(err);
@@ -175,7 +179,7 @@ const TaskListing = () => {
               color: 'white',
               marginLeft: 8,
               padding: 4,
-              width: 100,
+              width: Dimensions.get('window').width - 100,
               alignSelf: 'center'
             }}
           />
@@ -214,10 +218,11 @@ const TaskListing = () => {
   if (!taskLists || !tasks) return <></>;
 
   return (
+    <Skeleton loading={loading}>
     <KeyboardAvoidingView
       behavior={'position'}
       keyboardVerticalOffset={100}
-      style={{ padding: 5 }}>
+      style={{ padding: 5, flex: 1 }}>
       <DropDown
         items={taskLists}
         value={selectedTaskList?.name}
@@ -239,9 +244,7 @@ const TaskListing = () => {
       <Pressable onPress={createNewTask}>
         <View
           style={{
-            position: 'absolute',
-            right: 50,
-            bottom: 0,
+            flex: 1,
             borderRadius: 50,
             backgroundColor: 'gray',
             height: 50,
@@ -253,6 +256,7 @@ const TaskListing = () => {
         </View>
       </Pressable>
     </KeyboardAvoidingView>
+    </Skeleton>
   );
 };
 

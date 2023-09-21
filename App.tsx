@@ -1,15 +1,19 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, Text } from 'react-native';
 import GlobalContextProvider from './components/GlobalContext';
 import LoginScreen from './components/screens/LoginScreen';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {
+  DrawerToggleButton,
+  createDrawerNavigator,
+} from '@react-navigation/drawer';
 import { MMKV } from 'react-native-mmkv';
 import TaskListing from './components/screens/TaskListing';
 import CreateTaskList from './components/screens/CreateTaskList';
 import { RootStackParamList } from './types/global';
 import TaskLists from './components/screens/TaskLists';
+import HeaderTitle from './components/layout/HeadTitle';
 
 export const storage = new MMKV();
 
@@ -20,10 +24,10 @@ const navigatorTheme = {
   dark: true,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'rgb(45, 45, 45)',
-    background: 'rgb(45, 45, 45)',
+    primary: '#25262B',
+    background: '#25262B',
     card: 'rgb(90, 90, 90)',
-    text: 'rgb(235,235,235)',
+    text: 'rgb(200,200,200)',
   },
 };
 
@@ -32,7 +36,15 @@ const App = (): JSX.Element => {
     <GlobalContextProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <NavigationContainer theme={navigatorTheme}>
-          <Drawer.Navigator initialRouteName="Login">
+          <Drawer.Navigator
+            initialRouteName="Login"
+            screenOptions={{
+              drawerPosition: 'right',
+              headerLeft: () => false,
+              headerRight: () => <DrawerToggleButton tintColor='white'/>,
+              headerStyle: {backgroundColor: navigatorTheme.colors.background},
+              headerTitle: () => <HeaderTitle/>
+            }}>
             <Drawer.Screen
               name="Login"
               options={{ title: 'Login' }}
@@ -48,7 +60,7 @@ const App = (): JSX.Element => {
               options={{ title: 'CreateTaskList' }}
               component={CreateTaskList}
             />
-              <Drawer.Screen
+            <Drawer.Screen
               name="TaskLists"
               options={{ title: 'Manage tasklists' }}
               component={TaskLists}
